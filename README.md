@@ -21,7 +21,7 @@ Fetch.shared.request(url: "posts", method: "POST", body: ["limit": 25]) {
 		for (_, j): (String, JSON) in data {
 			print(j)
 		}
-    } else {
+	} else {
 		print(response["status"])
 		print(response["statusText"])
 	}

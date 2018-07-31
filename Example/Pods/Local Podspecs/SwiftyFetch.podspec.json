@@ -1,0 +1,27 @@
+{
+  "name": "SwiftyFetch",
+  "version": "0.1.0",
+  "summary": "A short description of SwiftyFetch.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/charlesfries/SwiftyFetch",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "charlesfries": "charliefries@icloud.com"
+  },
+  "source": {
+    "git": "https://github.com/charlesfries/SwiftyFetch.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "SwiftyFetch/Classes/**/*",
+  "dependencies": {
+    "SwiftyJSON": [
+      "~> 4.0"
+    ]
+  }
+}

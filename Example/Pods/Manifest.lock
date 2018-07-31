@@ -1,0 +1,24 @@
+PODS:
+  - SwiftyFetch (0.1.0):
+    - SwiftyJSON (~> 4.0)
+  - SwiftyJSON (4.0.0)
+
+DEPENDENCIES:
+  - SwiftyFetch (from `../`)
+  - SwiftyJSON (~> 4.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - SwiftyJSON
+
+EXTERNAL SOURCES:
+  SwiftyFetch:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  SwiftyFetch: 65fa904104bb3555bfda6b8550285be52570c3e0
+  SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
+
+PODFILE CHECKSUM: 7ba963a22f318b8370336172879111cf18a9dab4
+
+COCOAPODS: 1.5.3

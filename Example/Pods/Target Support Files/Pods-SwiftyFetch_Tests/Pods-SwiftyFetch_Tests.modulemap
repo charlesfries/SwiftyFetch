@@ -1,0 +1,6 @@
+framework module Pods_SwiftyFetch_Tests {
+  umbrella header "Pods-SwiftyFetch_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

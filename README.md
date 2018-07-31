@@ -9,6 +9,25 @@
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
+```swift
+Fetch.shared.setBaseUrl("https://jsonplaceholder.typicode.com/")
+Fetch.shared.setAPIKey("xxxxxxxxxxxxxxxxxxxx")
+
+Fetch.shared.request(url: "posts", method: "POST", body: ["limit": 25]) {
+	response in
+
+	if response["ok"] {
+		let data = response["json"]
+		for (_, j): (String, JSON) in data {
+			print(j)
+		}
+	} else {
+		print(response["status"])
+		print(response["statusText"])
+	}
+}
+```
+
 ## Requirements
 
 ## Installation

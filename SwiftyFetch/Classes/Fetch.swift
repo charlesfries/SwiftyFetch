@@ -52,16 +52,20 @@ public final class Fetch
             return
         }
         
+        // compiling body string from dict
         var bodyArr: [String] = []
         for (k, v) in body { bodyArr += ["\(k)=\(v)"] }
         let bodyStr = bodyArr.joined(separator: "&")
         
+        // request instantiation
         var r = URLRequest(url: URL(string: baseUrl + url)!)
         r.httpMethod = httpMethod
         r.httpBody = bodyStr.data(using: String.Encoding.utf8)
         
+        // appending headers
         for (k, v) in headers { r.addValue(v, forHTTPHeaderField: k) }
         
+        // adding authorization headers
         var authArr: [String] = []
         if apiKey != nil { authArr += ["Apikey \(apiKey)"] }
         if token != nil { authArr += ["Bearer \(token)"] }

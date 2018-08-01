@@ -10,8 +10,14 @@
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ```swift
+// AppDelegate.swift
+
 Fetch.shared.setBaseUrl("https://jsonplaceholder.typicode.com/")
 Fetch.shared.setAPIKey("xxxxxxxxxxxxxxxxxxxx")
+```
+
+```swift
+// ViewController.swift
 
 Fetch.shared.request(url: "posts", method: "POST", body: ["limit": 25]) {
 	response in

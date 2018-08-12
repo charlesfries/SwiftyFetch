@@ -14,6 +14,11 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 Fetch.shared.setBaseUrl("https://jsonplaceholder.typicode.com/")
 Fetch.shared.setAPIKey("xxxxxxxxxxxxxxxxxxxx")
+
+UserDefaults.standard.set("accessToken", forKey: "xxxxxxxxxxxxxxxxxxxx") // <- for testing; should be set by your auth controller
+if let accessToken = UserDefaults.standard.value(forKey: "accessToken") as? String {
+    Fetch.shared.setToken(accessToken)
+}
 ```
 
 ```swift

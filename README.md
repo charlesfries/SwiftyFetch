@@ -31,6 +31,7 @@ Fetch.shared.request(url: "posts", method: "POST", body: ["limit": 25]) {
 		let json = response["json"]
 		
 		print(json) // JSON payload
+		
 	} else {
 		print(response["status"])
 		print(response["statusText"])

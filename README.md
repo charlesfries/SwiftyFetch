@@ -12,6 +12,8 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 ```swift
 // AppDelegate.swift
 
+import SwiftyFetch
+
 Fetch.shared.setBaseUrl("https://jsonplaceholder.typicode.com/")
 Fetch.shared.setAPIKey("xxxxxxxxxxxxxxxxxxxx")
 
@@ -23,6 +25,8 @@ if let accessToken = UserDefaults.standard.value(forKey: "accessToken") as? Stri
 
 ```swift
 // ViewController.swift
+
+import SwiftyFetch
 
 Fetch.shared.request(url: "posts", method: "POST", body: ["limit": 25]) {
     response in

@@ -10,21 +10,32 @@
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ```swift
+// AppDelegate.swift
+
 Fetch.shared.setBaseUrl("https://jsonplaceholder.typicode.com/")
 Fetch.shared.setAPIKey("xxxxxxxxxxxxxxxxxxxx")
 
-Fetch.shared.request(url: "posts", method: "POST", body: ["limit": 25]) {
-	response in
+UserDefaults.standard.set("accessToken", forKey: "xxxxxxxxxxxxxxxxxxxx") // <- for testing; should be set by your auth controller
+if let accessToken = UserDefaults.standard.value(forKey: "accessToken") as? String {
+    Fetch.shared.setToken(accessToken)
+}
+```
 
-	if response["ok"] {
-		let data = response["json"]
-		for (_, j): (String, JSON) in data {
-			print(j)
-		}
-	} else {
-		print(response["status"])
-		print(response["statusText"])
-	}
+```swift
+// ViewController.swift
+
+Fetch.shared.request(url: "posts", method: "POST", body: ["limit": 25]) {
+    response in
+
+    if response["ok"] {
+        // Success
+        let json = response["json"]
+        print(json) // JSON payload
+    } else {
+        // Error
+        print(response["status"])
+        print(response["statusText"])
+    }
 }
 ```
 

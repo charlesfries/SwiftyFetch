@@ -28,17 +28,22 @@ if let accessToken = UserDefaults.standard.value(forKey: "accessToken") as? Stri
 
 import SwiftyFetch
 
-Fetch.shared.request(url: "posts", method: "POST", body: ["limit": 25]) {
-    response in
-
-    if response["ok"] {
-        // Success
-        let json = response["json"]
-        print(json) // JSON payload
-    } else {
-        // Error
-        print(response["status"])
-        print(response["statusText"])
+Fetch.shared.request("posts", method: "POST", body: ["limit": 25]) { result in
+    switch result {
+    
+    // Success
+    case .success(let response):
+        if response.ok {
+            let json = response.json
+            print(json) // JSON payload
+        } else {
+            print(response.status)
+            print(response.statusText)
+        }
+    
+    // Error
+    case .failure(let error):
+        print(error)
     }
 }
 ```

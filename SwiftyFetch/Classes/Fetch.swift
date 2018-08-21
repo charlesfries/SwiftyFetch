@@ -9,6 +9,31 @@
 import Foundation
 import SwiftyJSON
 
+public class Response {
+    public var status: Int
+    public var statusText: String
+    public var ok: Bool
+    public var headers: JSON
+    public var url: String
+    public var text: String
+    public var json: JSON
+    
+    public init(status: Int, statusText: String, ok: Bool, headers: JSON, url: String, text: String, json: JSON) {
+        self.status = status
+        self.statusText = statusText
+        self.ok = ok
+        self.headers = headers
+        self.url = url
+        self.text = text
+        self.json = json
+    }
+}
+
+public enum Result {
+    case success(Response)
+    case failure(Error)
+}
+
 public final class Fetch
 {
     public static let shared = Fetch()
@@ -26,7 +51,7 @@ public final class Fetch
                         method: String,
                         headers: [String: String] = [:],
                         body: [String: Any] = [:],
-                        handler: @escaping (_ error: Error?, _ response: JSON) -> ()) {
+                        handler: @escaping (_ result: Result) -> ()) {
         
         if baseUrl == nil {
             if !verifyUrl(url) {
@@ -74,40 +99,46 @@ public final class Fetch
         r.addValue(authArr.joined(separator: ","), forHTTPHeaderField: "Authorization")
         
         let t = URLSession.shared.dataTask(with: r) {
-            data, res, error in
+            data, response, error in
             
-            var response = JSON()
+            var result: Result
             
             if error == nil {
-                let http = res as! HTTPURLResponse
+                let http = response as! HTTPURLResponse
                 
                 let status = http.statusCode
                 let isOk = http.statusCode == 200
                 let statusText = isOk ? "ok" : HTTPURLResponse.localizedString(forStatusCode: status)
                 let headers = http.allHeaderFields
                 
-                response["status"].int = status
-                response["statusText"].string = statusText
-                response["ok"].bool = isOk
-                response["headers"] = JSON(headers)
-                response["url"].string = fullUrl
-                response["text"].string = ""
-                response["json"] = JSON()
+                var text: String
+                var json: JSON
                 
                 do {
                     let jsonData = try JSON(data: data!)
-                    
-                    response["text"].string = jsonData.rawString() ?? ""
-                    response["json"] = jsonData
+
+                    text = jsonData.rawString() ?? ""
+                    json = jsonData
                 } catch {
-                    response["text"].string = ""
-                    response["json"] = JSON()
+                    text = ""
+                    json = JSON()
                 }
                 
                 // TODO: handle nil text/json
+                
+                result = Result.success(Response(status: status,
+                                                 statusText: statusText,
+                                                 ok: isOk,
+                                                 headers: JSON(headers),
+                                                 url: fullUrl,
+                                                 text: text,
+                                                 json: json))
+                
+            } else {
+                result = Result.failure(error!)
             }
             
-            DispatchQueue.main.async { handler(error, response) }
+            DispatchQueue.main.async { handler(result) }
         }
         t.resume()
     }

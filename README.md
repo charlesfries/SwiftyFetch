@@ -43,6 +43,18 @@ Fetch.shared.request("posts", method: "POST", body: ["limit": 25]) { result in
 }
 ```
 
+```swift
+// case .success(let response):
+
+response.status // HTTP status code
+response.statusText // HTTP status description
+response.ok // true if 200
+response.headers // HTTP headers
+response.url // full requested URL
+response.text // string representation of response data
+response.json // JSON response data
+```
+
 ## Requirements
 
 ## Installation

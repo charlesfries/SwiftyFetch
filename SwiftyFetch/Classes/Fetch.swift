@@ -26,7 +26,7 @@ public final class Fetch
                         method: String,
                         headers: [String: String] = [:],
                         body: [String: Any] = [:],
-                        handler: @escaping (_ response: JSON) -> ()) {
+                        handler: @escaping (_ error: Error?, _ response: JSON) -> ()) {
         
         if baseUrl == nil {
             if !verifyUrl(url) {
@@ -49,7 +49,7 @@ public final class Fetch
         case "DELETE":
             httpMethod = "DELETE"
         default:
-            print("Invalid HTTP method.")
+            print("Invalid HTTP method. Method must be POST, GET, PUT, PATCH, or DELETE")
             return
         }
         
@@ -59,7 +59,8 @@ public final class Fetch
         let bodyStr = bodyArr.joined(separator: "&")
         
         // request instantiation
-        var r = URLRequest(url: URL(string: baseUrl + url)!)
+        let fullUrl = baseUrl + url
+        var r = URLRequest(url: URL(string: fullUrl)!)
         r.httpMethod = httpMethod
         r.httpBody = bodyStr.data(using: String.Encoding.utf8)
         
@@ -75,35 +76,39 @@ public final class Fetch
         let t = URLSession.shared.dataTask(with: r) {
             data, response, error in
             
-            var res: JSON = [
-                "status": 401,
-                "statusText": "Unauthorized",
-                "ok": false,
-                "headers": [:],
-                "url": "https://",
-                "text": "",
-                "json": [:]
-            ]
+            var payload: JSON = []
             
-            if error != nil {
-                res["ok"] = false
-                res["text"] = ""
-                res["json"] = [:]
-            } else {
+            if error == nil {
+                let http = response as! HTTPURLResponse
+                
+                let status = http.statusCode
+                let isOk = http.statusCode == 200
+                let statusText = isOk ? "ok" : HTTPURLResponse.localizedString(forStatusCode: status)
+                let headers = http.allHeaderFields
+                
+                payload = [
+                    "status": status,
+                    "statusText": statusText,
+                    "ok": isOk,
+                    "headers": headers,
+                    "url": fullUrl,
+                    "text": "",
+                    "json": [:]
+                ]
+                
                 do {
                     let jsonData = try JSON(data: data!)
                     
-                    res["ok"] = true
-                    res["text"] = jsonData
-                    res["json"] = jsonData
+                    payload["text"] = jsonData
+                    payload["json"] = jsonData
                 } catch {
-                    res["ok"] = false
-                    res["text"] = ""
-                    res["json"] = [:]
+                    payload["ok"] = false
+                    payload["text"] = ""
+                    payload["json"] = [:]
                 }
             }
             
-            DispatchQueue.main.async { handler(res) }
+            DispatchQueue.main.async { handler(error, payload) }
         }
         t.resume()
     }

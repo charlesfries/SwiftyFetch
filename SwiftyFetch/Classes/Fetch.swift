@@ -74,41 +74,40 @@ public final class Fetch
         r.addValue(authArr.joined(separator: ","), forHTTPHeaderField: "Authorization")
         
         let t = URLSession.shared.dataTask(with: r) {
-            data, response, error in
+            data, res, error in
             
-            var payload: JSON = []
+            var response = JSON()
             
             if error == nil {
-                let http = response as! HTTPURLResponse
+                let http = res as! HTTPURLResponse
                 
                 let status = http.statusCode
                 let isOk = http.statusCode == 200
                 let statusText = isOk ? "ok" : HTTPURLResponse.localizedString(forStatusCode: status)
                 let headers = http.allHeaderFields
                 
-                payload = [
-                    "status": status,
-                    "statusText": statusText,
-                    "ok": isOk,
-                    "headers": headers,
-                    "url": fullUrl,
-                    "text": "",
-                    "json": [:]
-                ]
+                response["status"].int = status
+                response["statusText"].string = statusText
+                response["ok"].bool = isOk
+                response["headers"] = JSON(headers)
+                response["url"].string = fullUrl
+                response["text"].string = ""
+                response["json"] = JSON()
                 
                 do {
                     let jsonData = try JSON(data: data!)
                     
-                    payload["text"] = jsonData
-                    payload["json"] = jsonData
+                    response["text"].string = jsonData.rawString() ?? ""
+                    response["json"] = jsonData
                 } catch {
-                    payload["ok"] = false
-                    payload["text"] = ""
-                    payload["json"] = [:]
+                    response["text"].string = ""
+                    response["json"] = JSON()
                 }
+                
+                // TODO: handle nil text/json
             }
             
-            DispatchQueue.main.async { handler(error, payload) }
+            DispatchQueue.main.async { handler(error, response) }
         }
         t.resume()
     }

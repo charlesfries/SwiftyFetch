@@ -44,8 +44,6 @@ Fetch.shared.request("posts", method: "POST", body: ["limit": 25]) { result in
 ```
 
 ```swift
-// case .success(let response):
-
 response.status // HTTP status code
 response.statusText // HTTP status description
 response.ok // true if 200

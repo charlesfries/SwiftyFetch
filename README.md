@@ -30,18 +30,13 @@ import SwiftyFetch
 
 Fetch.shared.request("posts", method: "POST", body: ["limit": 25]) { result in
     switch result {
-    
-    // Success
     case .success(let response):
         if response.ok {
             let json = response.json
-            print(json) // JSON payload
+            print("JSON: \(json)")
         } else {
-            print(response.status)
-            print(response.statusText)
+            print("HTTP: \(response.status), \(response.statusText)")
         }
-    
-    // Error
     case .failure(let error):
         print(error)
     }

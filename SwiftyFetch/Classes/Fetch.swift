@@ -12,7 +12,7 @@ import SwiftyJSON
 public final class Fetch
 {
     public static let shared = Fetch()
-    private init() { }
+    private init() {}
     
     private var baseUrl: String!
     private var apiKey: String!
@@ -28,11 +28,12 @@ public final class Fetch
                         body: [String: Any] = [:],
                         handler: @escaping (_ response: JSON) -> ()) {
         
-        guard let baseUrl: String = self.baseUrl else {
-            //if !verifyUrl(url) {
-                print("Base URL not set. Use setBaseUrl(_ baseUrl: String)")
-                return
-            //}
+        if baseUrl == nil {
+            if !verifyUrl(url) {
+                print("Could not derive full URL from parameter")
+            }
+            print("Base URL not set. Use setBaseUrl(_ baseUrl: String)")
+            return
         }
         
         let httpMethod: String

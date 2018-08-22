@@ -61,7 +61,7 @@ SwiftyFetch is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'SwiftyFetch'
+pod 'SwiftyFetch', :git => 'https://github.com/charlesfries/SwiftyFetch.git'
 ```
 
 ## Author
